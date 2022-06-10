@@ -1,0 +1,11 @@
+{
+  "node": "https://api.serey.io",
+  "stakebot": {
+      "admins": [123456789],
+  "bot_api_key": "ADD_HEAR_YOUR_API_KEY"
+    },
+    "feed_bot": {
+      "admins": [123456789],
+  "bot_api_key": "ADD_HEAR_YOUR_2_API_KEY"
+    }
+  }

@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@sereynetwork/sereyjs": "^0.1.0",
+    "big-integer": "latest",
+    "cron": "^1.8.2",
+    "express": "^4.16.4",
+    "keccak": "latest",
+    "mongodb": "latest",
+    "sjcl": "^1.0.8",
+    "telebot": "^1.4.1"
+  }
+}
