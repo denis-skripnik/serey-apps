@@ -641,25 +641,28 @@ let btns = await keybord(user.lng, 'unvote@' + post);
         let users = await udb.findAllUsers();
         if (content && content.code === 1 && content.created === timestamp && users && users.length > 0 && opbody.json_metadata) {
             let metadata = JSON.parse(opbody.json_metadata);
+            let tags = [];
+            let tags_list = '';
             if (metadata && metadata.tags && metadata.tags.length > 0) {
-        let tags = metadata.tags;
-        let tags_list = '';
-    for (let tag of tags) {
-        tags_list += ` <a href="https://golos.id/created/${tag}">#${tag}</a>`;
+                tags = metadata.tags;
+    for (let tag of metadata.tags) {
+        tags_list += ` <a href="https://serey.io/${tag}/new">#${tag}</a>`;
     }
-        for (let user of users) {
+}    
+    tags.push(opbody.parent_permlink);
+for (let user of users) {
             if (user.tags && user.tags !== '') {
-                let user_tags = user.tags.split(',');
-                if (user_tags && tags.some(item => user_tags.includes(item)) || user_tags.indexOf(opbody.parent_permlink) > -1) {
-                    let text = `${lng[user.lng].post_from_tag} <a href="https://dpos.space/golos/profiles/${opbody.author}">${opbody.author}</a>
+                let user_tags = user.tags.toLowerCase().split(',');
+                if (user_tags && tags.some(item => user_tags.includes(item))) {
+                    console.log('test 1');
+                    let text = `${lng[user.lng].post_from_tag} <a href="https://dpos.space/serey/profiles/${opbody.author}">${opbody.author}</a>
         <a href="https://serey.io/authors/${opbody.author}/${opbody.permlink}">${opbody.title}</a>
         ${lng[user.lng].tags}:${tags_list}`;
                                let btns = await keybord(user.lng, `upvote_button@${opbody.author}/${opbody.permlink}`);
-                    await botjs.sendMSG(user.id, text, btns, true);            
+                               await botjs.sendMSG(user.id, text, btns, true);            
                 ok += 1;
                 }
             }
-    }
     }
         }
     return ok;
