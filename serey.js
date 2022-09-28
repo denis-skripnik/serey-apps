@@ -8,7 +8,6 @@ const CronJob = require('cron').CronJob;
 const conf = require("./config.json");
 const top = require("./js_modules/serey_top");
 const stakebot = require("./js_modules/stake_bot");
-const feed_bot = require("./js_modules/feed_bot");
 const as = require("./js_modules/activity_stats");
 const wr = require("./js_modules/witness_rewards");
 const helpers = require("./js_modules/helpers");
@@ -21,8 +20,6 @@ const SHORT_DELAY = 3000;
 const SUPER_LONG_DELAY = 1000 * 60 * 15;
 
 async function processBlock(bn, props) {
-    if (bn%7200 == 0) await feed_bot.run();
-
     const block = await methods.getOpsInBlock(bn);
     let ok_ops_count = 0;
     let posts = {};
@@ -34,7 +31,6 @@ async function processBlock(bn, props) {
                     posts[`${opbody.author}/${opbody.permlink}`] = await methods.getContent(opbody.author, opbody.permlink)
                 }
             ok_ops_count += await as.commentOperation(posts[`${opbody.author}/${opbody.permlink}`], op, opbody, tr.timestamp);
-            ok_ops_count += await feed_bot.commentOperation(posts[`${opbody.author}/${opbody.permlink}`], op, opbody, tr.timestamp);
             ok_ops_count += await stakebot.runScanner(posts[`${opbody.author}/${opbody.permlink}`], op, opbody, tr.timestamp);
             ok_ops_count += await stakebot.commentOperation(posts[`${opbody.author}/${opbody.permlink}`], opbody);
             break;
@@ -113,3 +109,7 @@ new CronJob('0 0 0 * * *', asdb.removeactivityStats, null, true);
 new CronJob('0 0 0 * * 0', gsbpdb.removePosts, null, true);    
 new CronJob('0 0 3 * * *', wr.producersDay, null, true);    
 new CronJob('0 0 3 1 * *', wr.producersMonth, null, true);
+
+const cleanup = require("./databases/@db.js").cleanup;
+process.on('SIGINT', cleanup);
+process.on('SIGTERM', cleanup);

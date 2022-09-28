@@ -76,6 +76,34 @@ return res;
   }
 }
 
+async function removeUser(id) {
+
+	let client = await pool.getClient()
+	if (!client) {
+		return;
+	}
+
+	try {
+
+		const db = client.db("serey_stakebot");
+
+		let collection = db.collection('users');
+
+		let res = await collection.deleteOne({
+			id
+		});
+
+		return res;
+
+	} catch (err) {
+
+		console.log(err);
+		return err;
+	} finally {
+
+	}
+}
+
 async function findAllUsers() {
     let client = await pool.getClient()
 
@@ -107,4 +135,5 @@ return err;
 module.exports.getUser = getUser;
 module.exports.addUser = addUser;
 module.exports.updateUser = updateUser;
+module.exports.removeUser = removeUser;
 module.exports.findAllUsers = findAllUsers;

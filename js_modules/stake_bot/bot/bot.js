@@ -3,6 +3,7 @@ const TeleBot = require('telebot');
 const bot = new TeleBot(conf.stakebot.bot_api_key);
 bot.start();
 const i = require("./interface");
+const udb = require(process.cwd() + "/databases/serey_stakebot/usersdb");
 
 async function ids(uid) {
     if (conf.stakebot.admins.indexOf(uid) > -1) {
@@ -47,8 +48,8 @@ async function sendMSG(userId, text, buttons, inline) {
     } catch(error) {
         console.log(text);
         console.log('Ошибка с отправкой сообщения: ' + JSON.stringify(error));
-        if (error.error_code !== 403) {
-        process.exit(1);
+        if (error.error_code === 403 && error.description === "Forbidden: bot was blocked by the user" || error.error_code === 403 && error.description === "Forbidden: user is deactivated" || error.error_code !== 400 && error.description === "Bad Request: user not found") {
+        await udb.removeUser(userId);
         }
     }
     }

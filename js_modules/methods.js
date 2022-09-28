@@ -225,3 +225,4 @@ module.exports.randomGenerator = randomGenerator;
 module.exports.getBalances = getBalances;
 module.exports.getFeed = getFeed;
 module.exports.getFollowingList = getFollowingList;
+module.exports.vote = vote;
